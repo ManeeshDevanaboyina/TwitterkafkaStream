@@ -48,7 +48,7 @@ def get_twitter_data1():
 def get_twitter_data2():
     for tweet in new_topic_tweets:
 
-        producer.send(topic_name1, tweet.id)
+        producer.send(topic_name1, key=tweet.id,value=tweet.text)
         #print(str(normalize_timestamp(str(tweet.created_at))))
         #print(tweet.id)
         print(tweet.text)
@@ -59,7 +59,7 @@ def get_twitter_data2():
 
 
 
-
+#For Running the program for every couple of minutes
 def periodic_work(interval):
     while True:
         get_twitter_data1()
@@ -67,5 +67,5 @@ def periodic_work(interval):
         #interval should be an integer, the number of seconds to wait
         time.sleep(interval)
 
-periodic_work(60*1)  # get data every couple of minutes
+periodic_work(60*12)  # get data every couple of minutes
 
