@@ -41,8 +41,8 @@ def create_db_connection(host_name, user_name, user_password, db_name):
     return connection
 
 
-create_server_connection("localhost","root","")
-create_db_connection("localhost","root","","twitter_data_ingestion")
+#create_server_connection("localhost","root","")
+#create_db_connection("localhost","root","","twitter_data_ingestion")
 # Execute SQL queries
 
 def execute_query(connection, query):
