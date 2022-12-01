@@ -96,5 +96,5 @@ def periodic_work(interval):
         #interval should be an integer, the number of seconds to wait
         time.sleep(interval)
 
-periodic_work(60*12)  # get data every couple of minutes
+periodic_work(60*1)  # get data every couple of minutes
 
