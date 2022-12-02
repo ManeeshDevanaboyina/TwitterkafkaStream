@@ -25,7 +25,7 @@ users={u['id']: u for u in response.includes['users']}
 #print(response)
 #response=client.get_all_tweets_count("iphone")
 
-response1=client.search_recent_tweets("Covid")
+response1=client.search_recent_tweets(("Covid"),max_results=10,tweet_fields=['created_at','lang'])
 
 counts=client.get_recent_tweets_count("NewYork",granularity='day')
 
@@ -50,7 +50,7 @@ for tweet in tweets.data:
 tweets = response.data
 new_topic_tweets = response1.data
 producer = KafkaProducer(bootstrap_servers=['localhost:9092'],value_serializer=lambda K:json.dumps(K).encode('utf-8'))
-#producer = KafkaProducer(bootstrap_servers=['localhost:9092'],value_serializer=lambda K:json.dumps(K).encode('utf-8'))
+producer1 = KafkaProducer(bootstrap_servers=['localhost:9092'],key_serializer=str.encode,value_serializer=str.encode)
 topic_name = 'Twitter-Kafka'
 topic_name1="Covid"
 topic_name_count="Count"
@@ -77,7 +77,7 @@ def get_twitter_data1():
                 print(user.username)
                 my_bytes = tweet.encode('utf-8')
                 print(my_bytes)
-                #producer.send(topic_name,tweet.toJSON())
+                producer.send(topic_name,tweet)
                 #producer.send(topic_name,tweet.id)
                 print(tweet.id)
                 print(tweet.lang)
@@ -86,11 +86,16 @@ def get_twitter_data1():
 
 def get_twitter_data2():
     for tweet in new_topic_tweets:
+        if(tweet.lang=='en'):
 
-        producer.send(topic_name1, tweet)
-        #print(str(normalize_timestamp(str(tweet.created_at))))
-        #print(tweet.id)
-        #print(tweet.text)
+            #print(str(tweet.created_at))
+            print('super')
+            print(tweet.data)
+
+            #producer1.send(topic_name1,key=tweet.id,value=tweet.message)
+            #print(str(normalize_timestamp(str(tweet.created_at))))
+            #print(tweet.id)
+            #print(tweet.text)
 
 #Problem in sending object as JSON
 
