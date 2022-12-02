@@ -31,9 +31,13 @@ counts=client.get_recent_tweets_count("NewYork",granularity='day')
 
 counts_retweets=client.get_recent_tweets_count('covid -is:retweet',granularity='day')
 
-user_tweets=client.get_users(usernames=['twitterdev'])
-for user in users:
-    print("Maneesh",user)
+#Extracting User_ID of the Following User
+user_details=client.get_users(usernames=['twitterdev'])
+#Getting User Tweets of the following User
+tweets=client.get_liked_tweets(id=data['user_id'],tweet_fields=['lang'])
+for tweet in tweets.data:
+    print(tweet.id)
+    print(tweet.lang)
 
 
 
@@ -45,7 +49,8 @@ for user in users:
 # objects
 tweets = response.data
 new_topic_tweets = response1.data
-producer = KafkaProducer(bootstrap_servers=['localhost:9092'],value_serializer=lambda K:dumps(K).encode('utf-8'))
+producer = KafkaProducer(bootstrap_servers=['localhost:9092'],value_serializer=lambda K:json.dumps(K).encode('utf-8'))
+#producer = KafkaProducer(bootstrap_servers=['localhost:9092'],value_serializer=lambda K:json.dumps(K).encode('utf-8'))
 topic_name = 'Twitter-Kafka'
 topic_name1="Covid"
 topic_name_count="Count"
@@ -54,13 +59,15 @@ topic_name_covid_retweet="Covid-Retweet"
 
 def get_covid_retweet_counts():
     for count in counts_retweets.data:
-        print(count)
-        producer.send(topic_name_covid_retweet,count)
+        #print(type(count))
+        print("Maneesh1",json.dumps(count))
+        producer.send(topic_name_covid_retweet,json.dumps(count))
 get_covid_retweet_counts()
 def get_tweet_counts():
     for count in counts.data:
         print(count)
-        producer.send(topic_name_count,count)
+        print("Maneesh3",json.dumps(count))
+        producer.send(topic_name_count,json.dumps(count))
 get_tweet_counts()
 def get_twitter_data1():
 
@@ -68,7 +75,10 @@ def get_twitter_data1():
             if(tweet.lang=='en'):
                 user=users[tweet.author_id]
                 print(user.username)
-                producer.send(topic_name,tweet.id)
+                my_bytes = tweet.encode('utf-8')
+                print(my_bytes)
+                #producer.send(topic_name,tweet.toJSON())
+                #producer.send(topic_name,tweet.id)
                 print(tweet.id)
                 print(tweet.lang)
 
@@ -77,11 +87,12 @@ def get_twitter_data1():
 def get_twitter_data2():
     for tweet in new_topic_tweets:
 
-        producer.send(topic_name1, tweet.id)
+        producer.send(topic_name1, tweet)
         #print(str(normalize_timestamp(str(tweet.created_at))))
         #print(tweet.id)
         #print(tweet.text)
 
+#Problem in sending object as JSON
 
 #get_twitter_data1()
 
@@ -91,7 +102,7 @@ def get_twitter_data2():
 #For Running the program for every couple of minutes
 def periodic_work(interval):
     while True:
-        get_twitter_data1()
+       # get_twitter_data1()
         get_twitter_data2()
         #interval should be an integer, the number of seconds to wait
         time.sleep(interval)
