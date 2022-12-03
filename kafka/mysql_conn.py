@@ -1,7 +1,5 @@
 import mysql.connector
 from mysql.connector import Error
-import pandas as pd
-
 
 def create_server_connection(host_name, user_name, user_password):
     connection = None
@@ -11,7 +9,6 @@ def create_server_connection(host_name, user_name, user_password):
     except Error as err:
         print(f"Error: '{err}'")
     return connection
-
 
 # connection= create_server_connection("localhost","root","")
 
@@ -42,7 +39,7 @@ def create_db_connection(host_name, user_name, user_password, db_name):
 
 
 #create_server_connection("localhost","root","")
-connection1=create_db_connection("localhost","root","","twitter_data_ingestion")
+#connection1=create_db_connection("localhost","root","","twitter_data_ingestion")
 # Execute SQL queries
 
 def execute_query(connection, query):
@@ -54,10 +51,10 @@ def execute_query(connection, query):
     except Error as err:
         print(f"Error: '{err}'")
 
-query="CREATE TABLE Persons (PersonID int,LastName varchar(255),FirstName varchar(255),Address varchar(255),City varchar(255));"
-query1="Insert into Persons Values(1,'Maneesh','Devana','jdfbdkb','Hyd')"
-query2="Select * from persons;"
-print(execute_query(connection=connection1,query=query1))
+#query="CREATE TABLE Persons (PersonID int,LastName varchar(255),FirstName varchar(255),Address varchar(255),City varchar(255));"
+#query1="Insert into Persons Values(1,'Maneesh','Devana','jdfbdkb','Hyd')"
+#query2="Select * from persons;"
+#print(execute_query(connection=connection1,query=query1))
 # create_tweetdata_topic1 = """
 # create table orders
 
@@ -70,4 +67,4 @@ def read_query(connection, query):
         return result
     except Error as err:
         print(f"Error: '{err}'")
-print(read_query(connection=connection1,query=query2))
+#print(read_query(connection=connection1,query=query2))

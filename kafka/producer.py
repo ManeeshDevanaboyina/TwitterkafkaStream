@@ -2,13 +2,7 @@ import time
 import json
 import tweepy
 from kafka import KafkaProducer
-from json import dumps
-from datetime import datetime, timedelta
 
-def normalize_timestamp(time):
-    mytime = datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
-    mytime += timedelta(hours=1)   # the tweets are timestamped in GMT timezone, while I am in +1 timezone
-    return (mytime.strftime("%Y-%m-%d %H:%M:%S"))
 
 with open('config.json') as json_file:
     data = json.load(json_file)
@@ -50,7 +44,7 @@ for tweet in tweets.data:
 tweets = response.data
 new_topic_tweets = response1.data
 producer = KafkaProducer(bootstrap_servers=['localhost:9092'],value_serializer=lambda K:json.dumps(K).encode('utf-8'))
-producer1 = KafkaProducer(bootstrap_servers=['localhost:9092'],key_serializer=str.encode,value_serializer=str.encode)
+#producer1 = KafkaProducer(bootstrap_servers=['localhost:9092'],key_serializer=str.encode,value_serializer=str.encode)
 topic_name = 'Twitter-Kafka'
 topic_name1="Covid"
 topic_name_count="Count"
@@ -108,7 +102,9 @@ def get_twitter_data2():
 def periodic_work(interval):
     while True:
        # get_twitter_data1()
-        get_twitter_data2()
+        #get_twitter_data2()
+        #get_covid_retweet_counts()
+        #get_tweet_counts()
         #interval should be an integer, the number of seconds to wait
         time.sleep(interval)
 
